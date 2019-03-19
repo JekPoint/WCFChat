@@ -23,8 +23,8 @@ namespace WCFChatClient.ViewModels
         /// </summary>
         public List<string> ChatMessage
         {
-            get { return GetValue<List<string>>(ChatMessageProperty); }
-            set { SetValue(ChatMessageProperty, value); }
+            get => GetValue<List<string>>(ChatMessageProperty);
+            set => SetValue(ChatMessageProperty, value);
         }
 
         /// <summary>
