@@ -2,15 +2,25 @@
 
 namespace WCFChatBase
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IChatCallback), SessionMode = SessionMode.Required)]
     public interface IChatService
     {
+        [OperationContract(IsInitiating = true)]
+        bool Connect(Client client);
 
-        [OperationContract]
-        double GetSum(double i, double j);
+        [OperationContract(IsOneWay = true)]
+        void Say(Message msg);
 
+        [OperationContract(IsOneWay = true)]
+        void Whisper(Message msg, Client receiver);
 
-        [OperationContract]
-        double GetMult(double i, double j);
+        [OperationContract(IsOneWay = true)]
+        void IsWriting(Client client);
+
+        [OperationContract(IsOneWay = false)]
+        bool SendFile(FileMessage fileMsg, Client receiver);
+
+        [OperationContract(IsOneWay = true, IsTerminating = true)]
+        void Disconnect(Client client);
     }
 }

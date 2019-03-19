@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Catel.MVVM;
 using System.Threading.Tasks;
 using Catel.Data;
+using Catel.MVVM;
 
 namespace WCFChatClient.ViewModels
 {

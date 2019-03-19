@@ -1,14 +1,9 @@
 ﻿using System.Windows;
 using Catel.ApiCop;
 using Catel.ApiCop.Listeners;
-using Catel.IoC;
-using Catel.Logging;
-using Catel.Reflection;
-using Catel.Windows;
 
 namespace WCFChatClient
 {
-
 
     /// <summary>
     /// Interaction logic for App.xaml
