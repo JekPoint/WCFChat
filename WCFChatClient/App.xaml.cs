@@ -1,6 +1,9 @@
 ﻿using System.Windows;
 using Catel.ApiCop;
 using Catel.ApiCop.Listeners;
+using Catel.IoC;
+using WCFChatClient.Services;
+using WCFChatClient.Services.Interfaces;
 
 namespace WCFChatClient
 {
@@ -24,8 +27,8 @@ namespace WCFChatClient
 
             // TODO: Register custom types in the ServiceLocator
             //Log.Info("Registering custom types");
-            //var serviceLocator = ServiceLocator.Default;
-            //serviceLocator.RegisterType<IMyInterface, IMyClass>();
+            var serviceLocator = ServiceLocator.Default;
+            serviceLocator.RegisterType<IChatClientService, ChatClientService>();
 
             // To auto-forward styles, check out Orchestra (see https://github.com/wildgums/orchestra)
             // StyleHelper.CreateStyleForwardersForDefaultStyles();

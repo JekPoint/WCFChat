@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
 
-namespace WCFChatBase
+namespace WCFChatBase.Interface
 {
     public interface IChatCallback
     {

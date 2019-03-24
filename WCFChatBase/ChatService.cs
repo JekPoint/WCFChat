@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
+using WCFChatBase.Interface;
 
 namespace WCFChatBase
 {
@@ -14,6 +16,8 @@ namespace WCFChatBase
         private static IChatCallback CurrentCallback => OperationContext.Current.GetCallbackChannel<IChatCallback>();
 
         object syncObj = new object();
+
+        public event ChatServerEventHandler ChatServerEvent = delegate{};
 
         private bool SearchClientsByName(string name)
         {
@@ -50,9 +54,7 @@ namespace WCFChatBase
                         clients.Remove(key);
                         return false;
                     }
-
                 }
-
             }
             return true;
         }
@@ -147,6 +149,11 @@ namespace WCFChatBase
                 }
                 return;
             }
+        }
+
+        public void SendStatusMessageEx(string msg, DateTime datetime)
+        {
+            ChatServerEvent(this, new ChatServiceEventArgs(msg, datetime));
         }
     }
 }

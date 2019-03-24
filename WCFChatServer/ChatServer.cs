@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ServiceModel;
 using System.ServiceModel.Description;
+using System.Text;
 using WCFChatBase;
+using WCFChatBase.Interface;
 
 namespace WCFChatServer
 {
@@ -24,25 +26,40 @@ namespace WCFChatServer
         public ChatServer(int serverHttpPort, int serverTcpPort, int serverExchangeTcpPort, string serverIp = "localhost")
         {
             this.serverIp = serverIp;
+            ServiceMessage.AppendLine($"Server Ip {serverIp}");
+
             this.serverExchangeTcpPort = serverExchangeTcpPort;
+            var tcpAddress = new Uri($"net.tcp://{serverIp}:{serverTcpPort}/WPFHost");
+            ServiceMessage.AppendLine($"net.tcp        - net.tcp://{serverIp}:{serverTcpPort}/WPFHost");
 
-            var tcpAddress = new Uri($"net.tcp://{serverIp}:{serverTcpPort}/WPFHost/");
-            var httpAddress = new Uri($"http://{serverIp}:{serverHttpPort}/WPFHost/");
+            var httpAddress = new Uri($"http://{serverIp}:{serverHttpPort}/WPFHost");
+            ServiceMessage.AppendLine($"http           - http://{serverIp}:{serverHttpPort}/WPFHost");
 
-            Uri[] baseAddresses = { tcpAddress, httpAddress };
+            var serverListener = new Uri($"net.pipe://{serverIp}/WPFHost");
+            ServiceMessage.AppendLine($"serverListener - net.pipe://{serverIp}/WPFHost");
+
+            Uri[] baseAddresses = { tcpAddress, httpAddress, serverListener };
             host = new ServiceHost(typeof(ChatService), baseAddresses);
+
+            var namedPipeBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+            host.AddServiceEndpoint(typeof(IChatService), namedPipeBinding, "");
+        }
+
+        private void OnChatServerEvent(object sender, ChatServiceEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
 
         /// <summary>
         /// Статус работы сервера
         /// </summary>
-        public bool Connected { get; private set; }
+        public bool Open { get; private set; }
 
         /// <summary>
         /// Сервисные сообщения, в случае вне штатных ситуаций 
         /// </summary>
-        public string ServiceMessage { get; private set; }
+        public StringBuilder ServiceMessage { get; private set; } = new StringBuilder();
 
         /// <summary>
         /// Максимальное количество
@@ -70,16 +87,20 @@ namespace WCFChatServer
             TcpBindingInit();
             MetadataBehaviorInit();
 
+            ServiceMessage.AppendLine($"MaxConcurrentCalls {MaxConcurrentCalls}");
+            ServiceMessage.AppendLine($"MaxConcurrentSessions {MaxConcurrentSessions}");
+            ServiceMessage.AppendLine($"MaxConcurrentSessions {MaxConcurrentSessions}");
+            ServiceMessage.AppendLine($"MaxSizeBuffer {MaxSizeBuffer}");
             try
             {
                 host.Open();
-                Connected = true;   
-                ServiceMessage = "";
+                Open = true;   
+                ServiceMessage.AppendLine("Start Ok");
             }
             catch (Exception ex)
             {
-                Connected = false;
-                ServiceMessage = ex.Message;
+                Open = false;
+                ServiceMessage.AppendLine(ex.Message);
             }
         }
 
@@ -90,6 +111,7 @@ namespace WCFChatServer
             host.AddServiceEndpoint(typeof(IMetadataExchange),
                 MetadataExchangeBindings.CreateMexTcpBinding(),
                 $"net.tcp://{serverIp}:{serverExchangeTcpPort}/WPFHost/mex");
+            ServiceMessage.AppendLine($"Behavior       - net.tcp://{serverIp}:{serverExchangeTcpPort}/WPFHost/mex");
         }
 
         private void ThrottlingBehaviorInit()

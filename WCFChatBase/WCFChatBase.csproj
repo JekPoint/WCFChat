@@ -43,11 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatServiceEventArgs.cs" />
     <Compile Include="ChatService.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="FileMessage.cs" />
-    <Compile Include="IChatService.cs" />
-    <Compile Include="IChatServiceCallBack.cs" />
+    <Compile Include="Interface\IChatService.cs" />
+    <Compile Include="Interface\IChatCallback.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

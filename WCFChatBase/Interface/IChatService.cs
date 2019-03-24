@@ -1,6 +1,7 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 
-namespace WCFChatBase
+namespace WCFChatBase.Interface
 {
     [ServiceContract(CallbackContract = typeof(IChatCallback), SessionMode = SessionMode.Required)]
     public interface IChatService
@@ -22,5 +23,8 @@ namespace WCFChatBase
 
         [OperationContract(IsOneWay = true, IsTerminating = true)]
         void Disconnect(Client client);
+
+        [OperationContract]
+        void SendStatusMessageEx(string msg, DateTime datetime);
     }
 }

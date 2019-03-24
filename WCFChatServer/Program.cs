@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ServiceModel;
-using WCFChatBase;
 
 namespace WCFChatServer
 {
@@ -8,16 +6,14 @@ namespace WCFChatServer
     {
         static void Main(string[] args)
         {
-            // Инициализируем службу, указываем адрес, по которому она будет доступна
-            var host = new ServiceHost(typeof(ChatService), new Uri("http://localhost:8000/MyService"));
-            // Добавляем конечную точку службы с заданным интерфейсом, привязкой (создаём новую) и адресом конечной точки
-            host.AddServiceEndpoint(typeof(IChatService), new BasicHttpBinding(), "");
-            // Запускаем службу
-            host.Open();
-            Console.WriteLine("Сервер запущен");
+            Console.WriteLine("====================================");
+            Console.WriteLine("==============Start Server==========");
+            var chatServer = new ChatServer(7878, 7879, 7880);
+            chatServer.StartServer();
+            Console.WriteLine(chatServer.ServiceMessage);
             Console.ReadLine();
-            // Закрываем службу
-            host.Close();
+            Console.WriteLine("==============Stop Server==========");
+            Console.ReadLine();
         }
     }
 }
